@@ -96,7 +96,10 @@ FROM Passenger
 ORDER BY Distance DESC;
 
 --2.h.
-SELECT Passenger_name,
-(Distance / SUM(Distance) OVER (PARTITION BY Gender)) * 100 AS Percentage
-FROM Passenger
-GROUP BY Gender;
+WITH total AS 
+  (SELECT sum(distance)
+  AS total
+  FROM Passenger)
+  SELECT passenger_Name,(distance / total.total)*100
+  AS percentage_travel
+  FROM Passenger,total ;
